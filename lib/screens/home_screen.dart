@@ -240,18 +240,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           ],
                         ),
                       ),
-                      Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                          color: _primaryBlue.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Icon(
-                          Icons.notifications_none_rounded,
-                          color: _primaryBlue,
-                          size: 24,
-                        ),
-                      ),
+
                       const SizedBox(width: 8),
                       GestureDetector(
                         onTap: () {
