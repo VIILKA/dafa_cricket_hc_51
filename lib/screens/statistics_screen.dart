@@ -1,7 +1,7 @@
 import 'package:dafa_cricket/services/emotion_service.dart';
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
-import 'package:dafa_cricket/core/models/emotion_model.dart';
+import 'package:fl_chart/fl_chart.dart';
+import 'package:intl/intl.dart';
 
 class StatisticsScreen extends StatefulWidget {
   const StatisticsScreen({super.key});
@@ -12,241 +12,104 @@ class StatisticsScreen extends StatefulWidget {
 
 class _StatisticsScreenState extends State<StatisticsScreen> {
   final EmotionService _emotionService = EmotionService();
-  bool isWeekly = true;
-  Map<String, int> _stats = {};
-  int _totalEmotions = 0;
+  String _selectedPeriod = 'Week';
 
-  @override
-  void initState() {
-    super.initState();
-    _loadStats();
-  }
-
-  void _loadStats() {
-    setState(() {
-      _stats = _emotionService.getEmotionStats(isWeekly);
-      _totalEmotions = _emotionService.getTotalEmotions();
-    });
-  }
+  // Обновленная цветовая схема
+  static const Color _primaryBlue = Color(0xFF1E3D59);
+  static const Color _secondaryBlue = Color(0xFF17C3B2);
+  static const Color _goldLight = Color(0xFFFFD700);
+  static const Color _goldDark = Color(0xFFDAA520);
+  static const Color _surfaceColor = Colors.white;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF7E0),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    const SizedBox(height: 20),
-                    const Center(
-                      child: Text(
-                        'Statistics',
-                        style: TextStyle(
-                          fontSize: 24,
-                          color: Color(0xFF16151A),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                    Center(
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'March 2025',
-                            style: TextStyle(
-                              fontSize: 17,
-                              color: Color(0xFF16151A),
-                            ),
-                          ),
-                          const SizedBox(width: 4),
-                          Transform.rotate(
-                            angle: -3.14159,
-                            child: const Icon(
-                              Icons.arrow_upward,
-                              size: 18,
-                              color: Color(0xFF16151A),
-                            ),
-                          ),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              _primaryBlue,
+              _primaryBlue.withOpacity(0.8),
+              _secondaryBlue.withOpacity(0.3),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 15),
-                    Row(
+        child: SafeArea(
+          child: Stack(
                       children: [
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isWeekly = true;
-                                _loadStats();
-                              });
-                            },
+              // Декоративные элементы
+              Positioned(
+                top: -50,
+                right: -30,
                             child: Container(
-                              height: 30,
+                  width: 200,
+                  height: 200,
                               decoration: BoxDecoration(
-                                color:
-                                    isWeekly
-                                        ? const Color(0xFF9A0104)
-                                        : Colors.transparent,
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Weekly',
-                                  style: TextStyle(
-                                    color:
-                                        isWeekly
-                                            ? const Color(0xFFFDF7E0)
-                                            : const Color(0xFF16151A),
-                                    fontSize: 17,
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        _goldLight.withOpacity(0.2),
+                        _goldDark.withOpacity(0.1),
+                      ],
                                   ),
                                 ),
                               ),
                             ),
-                          ),
-                        ),
-                        Expanded(
-                          child: GestureDetector(
-                            onTap: () {
-                              setState(() {
-                                isWeekly = false;
-                                _loadStats();
-                              });
-                            },
+              Positioned(
+                bottom: 100,
+                left: -50,
                             child: Container(
-                              height: 30,
+                  width: 150,
+                  height: 150,
                               decoration: BoxDecoration(
-                                color:
-                                    !isWeekly
-                                        ? const Color(0xFF9A0104)
-                                        : Colors.transparent,
-                                border: Border.all(
-                                  color: const Color(0xFF16151A),
-                                  width: 1,
-                                ),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: Center(
-                                child: Text(
-                                  'Monthly',
-                                  style: TextStyle(
-                                    color:
-                                        !isWeekly
-                                            ? const Color(0xFFFDF7E0)
-                                            : const Color(0xFF16151A),
-                                    fontSize: 17,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        _secondaryBlue.withOpacity(0.2),
+                        _primaryBlue.withOpacity(0.1),
                       ],
                     ),
-                  ],
+                  ),
                 ),
               ),
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 20),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF16151A),
-                  borderRadius: BorderRadius.circular(10),
-                ),
+              // Основной контент
+              SingleChildScrollView(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  padding: const EdgeInsets.all(16),
                   child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Text(
-                        'My emotion statistics',
-                        style: TextStyle(
-                          color: Color(0xFFFDF7E0),
-                          fontSize: 17,
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      SizedBox(
-                        height: 220,
-                        child: Stack(
-                          alignment: Alignment.center,
-                          children: [
-                            CustomPaint(
-                              size: const Size(204, 204),
-                              painter: EmotionPieChartPainter(stats: _stats),
-                            ),
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  _totalEmotions.toString(),
-                                  style: const TextStyle(
-                                    color: Color(0xFFFDF7E0),
-                                    fontSize: 24,
-                                  ),
-                                ),
-                                const Text(
-                                  'Emotions noted',
-                                  style: TextStyle(
-                                    color: Color(0xFFFDF7E0),
-                                    fontSize: 14,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                      const SizedBox(height: 10),
-                      Wrap(
-                        spacing: 15,
-                        runSpacing: 15,
+                      Row(
                         children: [
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 80) / 2,
-                            child: _buildEmotionCard(
-                              icon: Icons.sentiment_very_satisfied,
-                              color: const Color(0xFFFBD751),
-                              days: '${_stats['Happy'] ?? 0} days',
-                              emotion: 'Happy',
+                          IconButton(
+                            onPressed: () => Navigator.pop(context),
+                            icon: const Icon(
+                              Icons.arrow_back,
+                              color: Colors.white,
                             ),
                           ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 80) / 2,
-                            child: _buildEmotionCard(
-                              icon: Icons.mood_bad,
-                              color: const Color(0xFFEE7700),
-                              days: '${_stats['Angry'] ?? 0} days',
-                              emotion: 'Angry',
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 80) / 2,
-                            child: _buildEmotionCard(
-                              icon: Icons.sentiment_dissatisfied,
-                              color: const Color(0xFF8EAF73),
-                              days: '${_stats['Sadness'] ?? 0} days',
-                              emotion: 'Sadness',
-                            ),
-                          ),
-                          SizedBox(
-                            width: (MediaQuery.of(context).size.width - 80) / 2,
-                            child: _buildEmotionCard(
-                              icon: Icons.psychology,
-                              color: const Color(0xFF548BA5),
-                              days: '${_stats['Worry'] ?? 0} days',
-                              emotion: 'Worry',
+                          const SizedBox(width: 16),
+                          const Text(
+                            'Statistics',
+                            style: TextStyle(
+                              fontSize: 24,
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                         ],
                       ),
+                      const SizedBox(height: 24),
+                      _buildPeriodSelector(),
+                      const SizedBox(height: 24),
+                      _buildMoodDistribution(),
+                      const SizedBox(height: 24),
+                      _buildMoodTrend(),
+                      const SizedBox(height: 24),
+                      _buildMostCommonMoods(),
+                      const SizedBox(height: 24),
                     ],
                   ),
                 ),
@@ -258,114 +121,331 @@ class _StatisticsScreenState extends State<StatisticsScreen> {
     );
   }
 
-  Widget _buildEmotionCard({
-    required IconData icon,
-    required Color color,
-    required String days,
-    required String emotion,
-  }) {
+  Widget _buildPeriodSelector() {
     return Container(
-      width: 120,
-      height: 140,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: const Color(0xFFFDF7E0),
-        borderRadius: BorderRadius.circular(10),
+        color: _surfaceColor.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: _goldLight.withOpacity(0.2),
+            offset: const Offset(0, 4),
+            blurRadius: 20,
+            spreadRadius: 0,
+          ),
+        ],
+        border: Border.all(color: _goldLight.withOpacity(0.3), width: 1),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(icon, size: 53, color: color),
-          const SizedBox(height: 10),
-          Column(
+          Text(
+            'Time Period',
+            style: TextStyle(
+              color: _primaryBlue,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          Row(children: [_buildPeriodButton('Week', Icons.calendar_today)]),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildPeriodButton(String period, IconData icon) {
+    final isSelected = _selectedPeriod == period;
+    return Expanded(
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _selectedPeriod = period;
+          });
+        },
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: isSelected ? _secondaryBlue : Colors.grey[100],
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: isSelected ? _secondaryBlue : Colors.grey[300]!,
+              width: 1,
+            ),
+          ),
+          child: Column(
             children: [
-              Text(days, style: TextStyle(color: color, fontSize: 17)),
-              Text(
-                emotion,
-                style: const TextStyle(color: Color(0xFF16151A), fontSize: 14),
+              Icon(
+                icon,
+                color: isSelected ? Colors.white : _primaryBlue,
+                size: 24,
               ),
+              const SizedBox(height: 4),
+              Text(
+                period,
+                style: TextStyle(
+                  color: isSelected ? Colors.white : _primaryBlue,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMoodDistribution() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: _surfaceColor.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: _goldLight.withOpacity(0.2),
+            offset: const Offset(0, 4),
+            blurRadius: 20,
+            spreadRadius: 0,
+          ),
+        ],
+        border: Border.all(color: _goldLight.withOpacity(0.3), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Mood Distribution',
+            style: TextStyle(
+              color: _primaryBlue,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            height: 200,
+            child: PieChart(
+              PieChartData(
+                sections: [
+                  PieChartSectionData(
+                    value: 40,
+                    title: '40%',
+                    color: const Color(0xFFFF7675),
+                    radius: 100,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  PieChartSectionData(
+                    value: 30,
+                    title: '30%',
+                    color: const Color(0xFF00B894),
+                    radius: 100,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  PieChartSectionData(
+                    value: 20,
+                    title: '20%',
+                    color: const Color(0xFF6C5CE7),
+                    radius: 100,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  PieChartSectionData(
+                    value: 10,
+                    title: '10%',
+                    color: const Color(0xFFFDCB6E),
+                    radius: 100,
+                    titleStyle: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          const SizedBox(height: 24),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildLegendItem('Happy', const Color(0xFF00B894)),
+              _buildLegendItem('Sad', const Color(0xFF6C5CE7)),
+              _buildLegendItem('Angry', const Color(0xFFFF7675)),
+              _buildLegendItem('Worry', const Color(0xFFFDCB6E)),
             ],
           ),
         ],
       ),
     );
   }
-}
 
-class EmotionPieChartPainter extends CustomPainter {
-  final Map<String, int> stats;
-
-  EmotionPieChartPainter({required this.stats});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2;
-    final strokeWidth = 20.0;
-
-    if (stats.isEmpty) {
-      final paint =
-          Paint()
-            ..color = Colors.grey.withOpacity(0.3)
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = strokeWidth;
-
-      final rect = Rect.fromCircle(
-        center: center,
-        radius: radius - strokeWidth / 2,
-      );
-
-      canvas.drawArc(rect, 0, 2 * 3.14159, false, paint);
-      return;
-    }
-
-    final colorMap = {
-      'Happy': const Color(0xFFFBD751),
-      'Sadness': const Color(0xFF8EAF73),
-      'Worry': const Color(0xFF548BA5),
-      'Angry': const Color(0xFFEE7700),
-    };
-
-    final total = stats.values.fold(0, (sum, value) => sum + value);
-    if (total == 0) {
-      final paint =
-          Paint()
-            ..color = Colors.grey.withOpacity(0.3)
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = strokeWidth;
-
-      final rect = Rect.fromCircle(
-        center: center,
-        radius: radius - strokeWidth / 2,
-      );
-
-      canvas.drawArc(rect, 0, 2 * 3.14159, false, paint);
-      return;
-    }
-
-    double startAngle = -3.14159 / 2;
-
-    stats.forEach((emotion, count) {
-      final sweepAngle = (count / total) * 2 * 3.14159;
-      final color = colorMap[emotion] ?? Colors.grey;
-
-      final paint =
-          Paint()
-            ..color = color
-            ..style = PaintingStyle.stroke
-            ..strokeWidth = strokeWidth;
-
-      final rect = Rect.fromCircle(
-        center: center,
-        radius: radius - strokeWidth / 2,
-      );
-
-      canvas.drawArc(rect, startAngle, sweepAngle, false, paint);
-
-      startAngle += sweepAngle;
-    });
+  Widget _buildLegendItem(String label, Color color) {
+    return Row(
+      children: [
+        Container(
+          width: 12,
+          height: 12,
+          decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+        ),
+        const SizedBox(width: 4),
+        Text(label, style: TextStyle(color: _primaryBlue, fontSize: 12)),
+      ],
+    );
   }
 
-  @override
-  bool shouldRepaint(EmotionPieChartPainter oldDelegate) =>
-      oldDelegate.stats != stats;
+  Widget _buildMoodTrend() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: _surfaceColor.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: _goldLight.withOpacity(0.2),
+            offset: const Offset(0, 4),
+            blurRadius: 20,
+            spreadRadius: 0,
+          ),
+        ],
+        border: Border.all(color: _goldLight.withOpacity(0.3), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Mood Trend',
+            style: TextStyle(
+              color: _primaryBlue,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            height: 200,
+            child: LineChart(
+              LineChartData(
+                gridData: FlGridData(show: false),
+                titlesData: FlTitlesData(show: false),
+                borderData: FlBorderData(show: false),
+                lineBarsData: [
+                  LineChartBarData(
+                    spots: [
+                      const FlSpot(0, 3),
+                      const FlSpot(1, 4),
+                      const FlSpot(2, 2),
+                      const FlSpot(3, 5),
+                      const FlSpot(4, 3),
+                      const FlSpot(5, 4),
+                    ],
+                    isCurved: true,
+                    color: _secondaryBlue,
+                    barWidth: 3,
+                    isStrokeCapRound: true,
+                    dotData: FlDotData(show: false),
+                    belowBarData: BarAreaData(
+                      show: true,
+                      color: _secondaryBlue.withOpacity(0.1),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMostCommonMoods() {
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: _surfaceColor.withOpacity(0.9),
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: _goldLight.withOpacity(0.2),
+            offset: const Offset(0, 4),
+            blurRadius: 20,
+            spreadRadius: 0,
+          ),
+        ],
+        border: Border.all(color: _goldLight.withOpacity(0.3), width: 1),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Most Common Moods',
+            style: TextStyle(
+              color: _primaryBlue,
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+          const SizedBox(height: 16),
+          _buildMoodItem('Happy', 40, const Color(0xFF00B894)),
+          const SizedBox(height: 12),
+          _buildMoodItem('Sad', 30, const Color(0xFF6C5CE7)),
+          const SizedBox(height: 12),
+          _buildMoodItem('Angry', 20, const Color(0xFFFF7675)),
+          const SizedBox(height: 12),
+          _buildMoodItem('Worry', 10, const Color(0xFFFDCB6E)),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildMoodItem(String mood, double percentage, Color color) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              mood,
+              style: TextStyle(
+                color: _primaryBlue,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            Text(
+              '$percentage%',
+              style: TextStyle(
+                color: _primaryBlue.withOpacity(0.6),
+                fontSize: 14,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        ClipRRect(
+          borderRadius: BorderRadius.circular(4),
+          child: LinearProgressIndicator(
+            value: percentage / 100,
+            backgroundColor: color.withOpacity(0.1),
+            valueColor: AlwaysStoppedAnimation<Color>(color),
+            minHeight: 8,
+          ),
+        ),
+      ],
+    );
+  }
 }

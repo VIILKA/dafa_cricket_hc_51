@@ -30,6 +30,29 @@ class _HomeScreenState extends State<HomeScreen> {
   // Это эмоция, которая была выбрана для текущего дня (если есть)
   EmotionRecord? _dayEmotion;
 
+  // Обновленная цветовая схема
+  static const Color _primaryBlue = Color(0xFF1E3D59);
+  static const Color _secondaryBlue = Color(0xFF17C3B2);
+  static const Color _goldLight = Color(0xFFFFD700);
+  static const Color _goldDark = Color(0xFFDAA520);
+  static const Color _surfaceColor = Colors.white;
+
+  // Обновленные цвета эмоций
+  Color _getMoodColor(String mood) {
+    switch (mood) {
+      case 'Angry':
+        return const Color(0xFFFF6B6B); // coral red
+      case 'Happy':
+        return const Color(0xFF4ECDC4); // turquoise
+      case 'Sadness':
+        return const Color(0xFF96A7CF); // dusty blue
+      case 'Worry':
+        return const Color(0xFFFFD93D); // warm yellow
+      default:
+        return const Color(0xFFF0F3F8);
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -92,22 +115,6 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  // Получаем цвет для эмоции
-  Color _getMoodColor(String mood) {
-    switch (mood) {
-      case 'Angry':
-        return const Color(0xFFEE7700); // оранжевый (злость)
-      case 'Happy':
-        return const Color(0xFFFBD751); // желтый (счастье)
-      case 'Sadness':
-        return const Color(0xFF8EAF3C); // зеленый (грусть)
-      case 'Worry':
-        return const Color(0xFF548BA5); // синий (беспокойство)
-      default:
-        return const Color(0xFFFDF7E0); // дефолтный цвет фона
-    }
-  }
-
   // Получаем объект EasyDayProps для дня календаря
   EasyDayProps _getDayProps(DateTime date) {
     // Приводим дату к формату без времени для сравнения
@@ -149,111 +156,255 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // Обновим внешний вид дней в соответствии с эмоциями
-    _updateDayPropsColors();
-
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF7E0),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: Container(
+        decoration: BoxDecoration(
+          // Создаем градиентный фон
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              _primaryBlue,
+              _primaryBlue.withOpacity(0.8),
+              _secondaryBlue.withOpacity(0.3),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
-                // Профиль пользователя
-                Row(
-                  children: [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        image: DecorationImage(
-                          image: AssetImage(_avatarPath),
-                          fit: BoxFit.cover,
-                        ),
+                // Верхняя панель
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: _surfaceColor.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: _goldLight.withOpacity(0.2),
+                        offset: const Offset(0, 4),
+                        blurRadius: 20,
+                        spreadRadius: 0,
                       ),
-                    ),
-                    const SizedBox(width: 6),
-                    Text(
-                      'Good morning!\n$_firstName',
-                      style: const TextStyle(
-                        fontSize: 17,
-                        color: Color(0xFF16151A),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                // Календарь дней с кастомным отображением
-                EasyDateTimeLine(
-                  initialDate: _selectedDate,
-                  onDateChange: (selectedDate) {
-                    setState(() {
-                      _selectedDate = selectedDate;
-                      _loadDayEmotion();
-                    });
-                  },
-                  headerProps: const EasyHeaderProps(showHeader: false),
-                  activeColor: const Color(0xFF9A0104),
-                  dayProps: EasyDayProps(
-                    width: 43,
-                    height: 66,
-                    dayStructure: DayStructure.dayNumDayStr,
-                    activeDayStyle: DayStyle(
-                      dayNumStyle: const TextStyle(
-                        color: Color(0xFF16151A),
-                        fontSize: 17,
-                      ),
-                      dayStrStyle: const TextStyle(
-                        color: Color(0xFF16151A),
-                        fontSize: 17,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: const Color(0xFF9A0104)),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
-                    ),
-                    inactiveDayStyle: DayStyle(
-                      dayNumStyle: const TextStyle(
-                        color: Color(0xFF16151A),
-                        fontSize: 17,
-                      ),
-                      dayStrStyle: const TextStyle(
-                        color: Color(0xFF16151A),
-                        fontSize: 17,
-                      ),
-                      decoration: BoxDecoration(
-                        color: const Color(0xFFFDF7E0),
-                        borderRadius: const BorderRadius.all(
-                          Radius.circular(10),
-                        ),
-                      ),
+                    ],
+                    border: Border.all(
+                      color: _goldLight.withOpacity(0.3),
+                      width: 1,
                     ),
                   ),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(2),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            colors: [
+                              _primaryBlue,
+                              _secondaryBlue.withOpacity(0.8),
+                            ],
+                          ),
+                          shape: BoxShape.circle,
+                        ),
+                        child: CircleAvatar(
+                          radius: 28,
+                          backgroundColor: _surfaceColor,
+                          child: CircleAvatar(
+                            radius: 26,
+                            backgroundImage: AssetImage(_avatarPath),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Welcome back,',
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _firstName,
+                              style: const TextStyle(
+                                color: Color(0xFF2D3142),
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: _primaryBlue.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Icon(
+                          Icons.notifications_none_rounded,
+                          color: _primaryBlue,
+                          size: 24,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                                  (context) => const ListOfTriggersScreen(),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          padding: const EdgeInsets.all(12),
+                          decoration: BoxDecoration(
+                            color: _primaryBlue.withOpacity(0.1),
+                            borderRadius: BorderRadius.circular(16),
+                          ),
+                          child: Icon(
+                            Icons.add_circle_outline,
+                            color: _primaryBlue,
+                            size: 24,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-                const SizedBox(height: 20),
 
-                // Если на выбранную дату есть запись эмоции
-                if (_dayEmotion != null)
-                  _buildMoodDisplay()
-                // Иначе отображаем выбор настроения
-                else
-                  _buildMoodSelection(),
-
-                const SizedBox(height: 20),
-
-                // Контейнер со списком триггеров
+                // Календарь с новым дизайном
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF9A0104),
-                    borderRadius: BorderRadius.circular(10),
+                    color: _surfaceColor,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        offset: const Offset(0, 4),
+                        blurRadius: 20,
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(
+                          'Your Mood Calendar',
+                          style: TextStyle(
+                            color: Colors.grey[800],
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      EasyDateTimeLine(
+                        initialDate: _selectedDate,
+                        onDateChange: (selectedDate) {
+                          setState(() {
+                            _selectedDate = selectedDate;
+                          });
+                          _loadDayEmotion();
+                        },
+                        activeColor: _primaryBlue,
+                        dayProps: EasyDayProps(
+                          height: 68,
+                          width: 56,
+                          dayStructure: DayStructure.dayNumDayStr,
+                          inactiveDayStyle: DayStyle(
+                            borderRadius: 16,
+                            dayNumStyle: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            dayStrStyle: TextStyle(
+                              color: Colors.grey[400],
+                              fontSize: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              color: Colors.grey[50],
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                          ),
+                          activeDayStyle: DayStyle(
+                            dayNumStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            dayStrStyle: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                colors: [_primaryBlue, _secondaryBlue],
+                              ),
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: _primaryBlue.withOpacity(0.3),
+                                  offset: const Offset(0, 4),
+                                  blurRadius: 12,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Секция настроения
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(24),
+                  decoration: BoxDecoration(
+                    color: _surfaceColor,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        offset: const Offset(0, 4),
+                        blurRadius: 20,
+                        spreadRadius: 0,
+                      ),
+                    ],
+                  ),
+                  child:
+                      _dayEmotion == null
+                          ? _buildMoodSelection()
+                          : _buildMoodDetails(),
+                ),
+
+                // Секция List of triggers
+                Container(
+                  margin: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: _surfaceColor,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        offset: const Offset(0, 4),
+                        blurRadius: 20,
+                        spreadRadius: 0,
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -261,117 +412,131 @@ class _HomeScreenState extends State<HomeScreen> {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          const Text(
+                          Text(
                             'My list of triggers',
                             style: TextStyle(
-                              color: Color(0xFFFDF7E0),
-                              fontSize: 17,
+                              color: Colors.grey[800],
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {
+                          GestureDetector(
+                            onTap: () {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                   builder:
                                       (context) => const ListOfTriggersScreen(),
                                 ),
-                              ).then((_) {
-                                setState(() {});
-                              });
+                              );
                             },
-                            icon: const Icon(
-                              Icons.add,
-                              color: Color(0xFFFDF7E0),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: _primaryBlue.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Icon(
+                                Icons.add_circle_outline,
+                                color: _primaryBlue,
+                                size: 20,
+                              ),
                             ),
                           ),
                         ],
                       ),
-                      _triggerService.hasAnyTriggerLists()
-                          ? Column(
+                      const SizedBox(height: 16),
+                      FutureBuilder<List<Map<String, dynamic>>>(
+                        future: Future.value(
+                          _triggerService
+                              .getAllTriggerLists()
+                              .map(
+                                (list) => {
+                                  'name': list.name,
+                                  'triggers': list.triggers,
+                                },
+                              )
+                              .toList(),
+                        ),
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          }
+
+                          if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          }
+
+                          final triggerLists = snapshot.data ?? [];
+                          if (triggerLists.isEmpty) {
+                            return Center(
+                              child: Text(
+                                'No trigger lists yet',
+                                style: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontSize: 16,
+                                ),
+                              ),
+                            );
+                          }
+
+                          return Column(
                             children:
-                                _triggerService.getAllTriggerLists().map((
-                                  list,
-                                ) {
+                                triggerLists.map((list) {
                                   return Container(
-                                    margin: const EdgeInsets.only(bottom: 6),
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 9,
-                                    ),
+                                    margin: const EdgeInsets.only(bottom: 12),
+                                    padding: const EdgeInsets.all(16),
                                     decoration: BoxDecoration(
-                                      color: const Color(0xFFFDF7E0),
-                                      borderRadius: BorderRadius.circular(10),
+                                      color: Colors.grey[50],
+                                      borderRadius: BorderRadius.circular(16),
+                                      border: Border.all(
+                                        color: Colors.grey[200]!,
+                                      ),
                                     ),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
+                                    child: Row(
                                       children: [
-                                        Text(
-                                          list.name,
-                                          style: const TextStyle(
-                                            color: Color(0xFF16151A),
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 14,
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Text(
+                                                list['name'] ?? 'Unnamed List',
+                                                style: const TextStyle(
+                                                  fontSize: 16,
+                                                  fontWeight: FontWeight.w600,
+                                                ),
+                                              ),
+                                              if (list['triggers'] != null) ...[
+                                                const SizedBox(height: 4),
+                                                Text(
+                                                  '${(list['triggers'] as List).length} triggers',
+                                                  style: TextStyle(
+                                                    color: Colors.grey[600],
+                                                    fontSize: 14,
+                                                  ),
+                                                ),
+                                              ],
+                                            ],
                                           ),
                                         ),
-                                        const SizedBox(height: 4),
-                                        Wrap(
-                                          spacing: 4,
-                                          runSpacing: 4,
-                                          children:
-                                              list.triggers.map((trigger) {
-                                                return Container(
-                                                  padding:
-                                                      const EdgeInsets.symmetric(
-                                                        horizontal: 8,
-                                                        vertical: 5,
-                                                      ),
-                                                  decoration: BoxDecoration(
-                                                    color: const Color(
-                                                      0xFFEEE9D0,
-                                                    ),
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          14,
-                                                        ),
-                                                  ),
-                                                  child: Text(
-                                                    trigger,
-                                                    style: const TextStyle(
-                                                      color: Color(0xFF16151A),
-                                                      fontSize: 12,
-                                                    ),
-                                                  ),
-                                                );
-                                              }).toList(),
+                                        Icon(
+                                          Icons.chevron_right,
+                                          color: Colors.grey[400],
                                         ),
                                       ],
                                     ),
                                   );
                                 }).toList(),
-                          )
-                          : Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 9,
-                            ),
-                            decoration: BoxDecoration(
-                              color: const Color(0xFFFDF7E0),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            child: const Text(
-                              'You don\'t have any list of triggers. Let\'s create it!',
-                              style: TextStyle(
-                                color: Color(0xFF16151A),
-                                fontSize: 14,
-                              ),
-                            ),
-                          ),
+                          );
+                        },
+                      ),
                     ],
                   ),
                 ),
-                const SizedBox(height: 30),
               ],
             ),
           ),
@@ -380,280 +545,278 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // Виджет для отображения выбора настроения
   Widget _buildMoodSelection() {
-    String? selectedMood;
-
-    return StatefulBuilder(
-      builder:
-          (context, setState) => Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              const Text(
-                'Today, I am',
-                style: TextStyle(fontSize: 24, color: Color(0xFF16151A)),
-              ),
-              const SizedBox(height: 15),
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 2,
-                mainAxisSpacing: 10,
-                crossAxisSpacing: 10,
-                childAspectRatio: 1,
-                children: [
-                  _buildMoodCard(
-                    'Sadness',
-                    const Color(0xFF8EAF3C),
-                    '😔',
-                    isSelected: selectedMood == 'Sadness',
-                    onTap: () {
-                      setState(() {
-                        selectedMood = 'Sadness';
-                      });
-                    },
-                  ),
-                  _buildMoodCard(
-                    'Happy',
-                    const Color(0xFFFBD751),
-                    '😊',
-                    isSelected: selectedMood == 'Happy',
-                    onTap: () {
-                      setState(() {
-                        selectedMood = 'Happy';
-                      });
-                    },
-                  ),
-                  _buildMoodCard(
-                    'Worry',
-                    const Color(0xFF548BA5),
-                    '😟',
-                    isSelected: selectedMood == 'Worry',
-                    onTap: () {
-                      setState(() {
-                        selectedMood = 'Worry';
-                      });
-                    },
-                  ),
-                  _buildMoodCard(
-                    'Angry',
-                    const Color(0xFFEE7700),
-                    '😠',
-                    isSelected: selectedMood == 'Angry',
-                    onTap: () {
-                      setState(() {
-                        selectedMood = 'Angry';
-                      });
-                    },
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed:
-                    selectedMood == null
-                        ? null
-                        : () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder:
-                                  (context) => AddMoodScreen(
-                                    initialMood: selectedMood!,
-                                    selectedDate: _selectedDate,
-                                  ),
-                            ),
-                          ).then((_) {
-                            _loadDayEmotion();
-                          });
-                        },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF9A0104),
-                  minimumSize: const Size(double.infinity, 50),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                ),
-                child: const Text(
-                  'Next',
-                  style: TextStyle(color: Color(0xFFFDF7E0), fontSize: 17),
-                ),
-              ),
-            ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          'How are you feeling?',
+          style: TextStyle(
+            color: Colors.grey[800],
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
           ),
+        ),
+        const SizedBox(height: 24),
+        GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 2,
+          mainAxisSpacing: 16,
+          crossAxisSpacing: 16,
+          childAspectRatio: 1.2,
+          children: [
+            _buildMoodCard(
+              'Happy',
+              _getMoodColor('Happy'),
+              '😊',
+              isSelected: false,
+              onTap: () => _navigateToAddMood('Happy'),
+            ),
+            _buildMoodCard(
+              'Angry',
+              _getMoodColor('Angry'),
+              '😠',
+              isSelected: false,
+              onTap: () => _navigateToAddMood('Angry'),
+            ),
+            _buildMoodCard(
+              'Sad',
+              _getMoodColor('Sadness'),
+              '😔',
+              isSelected: false,
+              onTap: () => _navigateToAddMood('Sadness'),
+            ),
+            _buildMoodCard(
+              'Worried',
+              _getMoodColor('Worry'),
+              '😟',
+              isSelected: false,
+              onTap: () => _navigateToAddMood('Worry'),
+            ),
+          ],
+        ),
+      ],
     );
   }
 
-  // Виджет для отображения уже выбранного настроения
-  Widget _buildMoodDisplay() {
+  Widget _buildMoodCard(
+    String text,
+    Color color,
+    String emoji, {
+    required bool isSelected,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [color.withOpacity(0.8), color.withOpacity(0.6)],
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: color.withOpacity(0.3),
+              offset: const Offset(0, 8),
+              blurRadius: 16,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(emoji, style: const TextStyle(fontSize: 40)),
+            const SizedBox(height: 12),
+            Text(
+              text,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 18,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  void _navigateToAddMood(String mood) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder:
+            (context) =>
+                AddMoodScreen(initialMood: mood, selectedDate: _selectedDate),
+      ),
+    ).then((_) {
+      _loadDayEmotion();
+      _preloadEmotionsForCalendar();
+    });
+  }
+
+  Widget _buildMoodDetails() {
     Color moodColor;
     String moodEmoji;
 
-    // Определяем цвет и эмодзи в зависимости от эмоции
     switch (_dayEmotion!.emotion) {
       case 'Sadness':
-        moodColor = const Color(0xFF8EAF3C);
+        moodColor = const Color(0xFF6C5CE7);
         moodEmoji = '😔';
         break;
       case 'Happy':
-        moodColor = const Color(0xFFFBD751);
+        moodColor = const Color(0xFF00B894);
         moodEmoji = '😊';
         break;
       case 'Worry':
-        moodColor = const Color(0xFF548BA5);
+        moodColor = const Color(0xFFFDCB6E);
         moodEmoji = '😟';
         break;
       case 'Angry':
-        moodColor = const Color(0xFFEE7700);
+        moodColor = const Color(0xFFFF7675);
         moodEmoji = '😠';
         break;
       default:
-        moodColor = const Color(0xFFEE7700);
+        moodColor = const Color(0xFFA8A8A8);
         moodEmoji = '😐';
     }
 
-    return Container(
-      padding: const EdgeInsets.all(10),
-      decoration: BoxDecoration(
-        color: const Color(0xFF16151A),
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: SingleChildScrollView(
+    return SingleChildScrollView(
+      child: Container(
+        padding: const EdgeInsets.all(16),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [moodColor.withOpacity(0.9), moodColor.withOpacity(0.7)],
+          ),
+          borderRadius: BorderRadius.circular(24),
+          boxShadow: [
+            BoxShadow(
+              color: moodColor.withOpacity(0.3),
+              offset: const Offset(0, 8),
+              blurRadius: 16,
+              spreadRadius: 0,
+            ),
+          ],
+        ),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: [
-            const Text(
-              'My mood for today:',
-              style: TextStyle(color: Color(0xFFFDF7E0), fontSize: 17),
-            ),
-            const SizedBox(height: 1),
-
-            // Карточка настроения
-            Container(
-              width: 87,
-              height: 90,
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: moodColor,
-                borderRadius: BorderRadius.circular(16),
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(moodEmoji, style: const TextStyle(fontSize: 37)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _dayEmotion!.emotion,
-                        style: const TextStyle(
-                          color: Color(0xFF16151A),
-                          fontSize: 14,
-                        ),
-                      ),
-                      const Icon(
-                        Icons.keyboard_arrow_up,
-                        size: 14,
-                        color: Color(0xFF16151A),
-                      ),
-                    ],
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'Today\'s Mood',
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 20,
+                    fontWeight: FontWeight.w600,
                   ),
-                ],
+                ),
+                Text(
+                  DateFormat('MMM d, y').format(_selectedDate),
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 16,
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 16),
+            Center(
+              child: Container(
+                padding: const EdgeInsets.all(20),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.2),
+                  shape: BoxShape.circle,
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(moodEmoji, style: const TextStyle(fontSize: 40)),
+                    const SizedBox(height: 8),
+                    Text(
+                      _dayEmotion!.emotion,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-
-            const SizedBox(height: 8),
-
-            // Раздел "Потому что"
-            const Text(
-              'Because:',
-              style: TextStyle(color: Color(0xFFFDF7E0), fontSize: 17),
-            ),
-            const SizedBox(height: 8),
-
+            const SizedBox(height: 16),
             if (_dayEmotion!.reasons != null &&
-                _dayEmotion!.reasons!.isNotEmpty)
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFDF7E0),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Wrap(
-                  spacing: 4,
-                  runSpacing: 4,
-                  children:
-                      _dayEmotion!.reasons!.map((reason) {
-                        return Container(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 8,
-                            vertical: 5,
-                          ),
-                          decoration: BoxDecoration(
-                            color: const Color(0xFF16151A),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Text(
-                                reason,
-                                style: const TextStyle(
-                                  color: Color(0xFFFDF7E0),
-                                  fontSize: 14,
-                                ),
-                              ),
-                            ],
-                          ),
-                        );
-                      }).toList(),
-                ),
-              )
-            else
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
-                decoration: BoxDecoration(
-                  color: const Color(0xFFFDF7E0),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: const Text(
-                  'No reasons specified',
-                  style: TextStyle(color: Color(0xFF16151A), fontSize: 14),
+                _dayEmotion!.reasons!.isNotEmpty) ...[
+              Text(
+                'Reasons',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.9),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
                 ),
               ),
-
-            const SizedBox(height: 8),
-
-            // Раздел комментария
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children:
+                    _dayEmotion!.reasons!.map((reason) {
+                      return Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        child: Text(
+                          reason,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      );
+                    }).toList(),
+              ),
+            ],
             if (_dayEmotion!.comment != null &&
                 _dayEmotion!.comment!.isNotEmpty) ...[
-              const Text(
-                'My comment:',
-                style: TextStyle(color: Color(0xFFFDF7E0), fontSize: 17),
+              const SizedBox(height: 16),
+              Text(
+                'Comment',
+                style: TextStyle(
+                  color: Colors.white.withOpacity(0.9),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
               const SizedBox(height: 8),
               Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(10),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
-                  color: const Color(0xFFFDF7E0),
-                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white.withOpacity(0.2),
+                  borderRadius: BorderRadius.circular(16),
                 ),
                 child: Text(
                   _dayEmotion!.comment!,
-                  style: const TextStyle(
-                    color: Color(0xFF16151A),
-                    fontSize: 14,
-                  ),
+                  style: const TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ),
             ],
-
-            const SizedBox(height: 10),
-
-            // Кнопка редактирования
+            const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () {
                 Navigator.push(
@@ -673,15 +836,17 @@ class _HomeScreenState extends State<HomeScreen> {
                 });
               },
               style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF9A0104),
-                minimumSize: const Size(double.infinity, 50),
+                backgroundColor: Colors.white,
+                foregroundColor: moodColor,
+                minimumSize: const Size(double.infinity, 48),
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(14),
+                  borderRadius: BorderRadius.circular(16),
                 ),
+                elevation: 0,
               ),
               child: const Text(
                 'Edit Mood',
-                style: TextStyle(color: Color(0xFFFDF7E0), fontSize: 17),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
               ),
             ),
           ],
@@ -689,72 +854,49 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+}
 
-  Widget _buildMoodCard(
-    String text,
-    Color color,
-    String emoji, {
-    required bool isSelected,
-    required VoidCallback onTap,
-  }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          color: color,
-          borderRadius: BorderRadius.circular(16),
-          border:
-              isSelected
-                  ? Border.all(color: const Color(0xFF9A0104), width: 2)
-                  : null,
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(emoji, style: const TextStyle(fontSize: 50)),
-            Text(
-              text,
-              style: const TextStyle(
-                color: Color(0xFF16151A),
-                fontSize: 16,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+class BackgroundPainter extends CustomPainter {
+  final Color goldColor;
+  final Color blueColor;
+
+  BackgroundPainter({required this.goldColor, required this.blueColor});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint =
+        Paint()
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.0;
+
+    // Рисуем золотые волнистые линии
+    paint.color = goldColor.withOpacity(0.2);
+    _drawWavyLine(canvas, size, 0.3, paint);
+    _drawWavyLine(canvas, size, 0.7, paint);
+
+    // Рисуем синие волнистые линии
+    paint.color = blueColor.withOpacity(0.2);
+    _drawWavyLine(canvas, size, 0.4, paint);
+    _drawWavyLine(canvas, size, 0.8, paint);
   }
 
-  // Вспомогательный метод для получения эмодзи эмоции
-  Widget _buildEmotionEmoji(String emotion) {
-    switch (emotion) {
-      case 'Sadness':
-        return const Text('😔', style: TextStyle(fontSize: 16));
-      case 'Happy':
-        return const Text('😊', style: TextStyle(fontSize: 16));
-      case 'Worry':
-        return const Text('😟', style: TextStyle(fontSize: 16));
-      case 'Angry':
-        return const Text('😠', style: TextStyle(fontSize: 16));
-      default:
-        return const Text('😐', style: TextStyle(fontSize: 16));
+  void _drawWavyLine(
+    Canvas canvas,
+    Size size,
+    double heightFactor,
+    Paint paint,
+  ) {
+    final path = Path();
+    final height = size.height * heightFactor;
+    path.moveTo(0, height);
+
+    for (double i = 0; i < size.width; i += 30) {
+      path.quadraticBezierTo(i + 15, height - 20, i + 30, height);
     }
+
+    canvas.drawPath(path, paint);
   }
 
-  // Вспомогательный метод для динамического обновления цветов дней
-  void _updateDayPropsColors() {
-    // Окрашиваем дни календаря перед рендером
-    for (final entry in _dateEmotionsCache.entries) {
-      // Получаем инстанс эмоции
-      final emotion = entry.value;
-      // Получаем цвет для данной эмоции
-      final color = _getMoodColor(emotion.emotion);
-
-      // Здесь можно было бы программно установить цвет дня в календаре,
-      // но текущая версия библиотеки не поддерживает эту возможность.
-      // В будущих версиях можно будет использовать API для программного
-      // изменения цвета каждого дня.
-    }
-  }
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

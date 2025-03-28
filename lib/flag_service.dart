@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flagsmith/flagsmith.dart';
 
 class FlagService {
-  static const String _apiKey = '9askhXTvJ5N4q8GMFXxPdD';
+  static const String _apiKey = 'jBzJPi6R7FershQ2BupJ4y';
 
   late final FlagsmithClient _flagsmithClient;
   bool showWebView = false;

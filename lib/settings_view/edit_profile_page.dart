@@ -34,6 +34,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late String _avatarPath;
   late Box<UserProfile> _userBox;
 
+  // Цветовая схема
+  static const Color _primaryBlue = Color(0xFF1E3D59);
+  static const Color _secondaryBlue = Color(0xFF17C3B2);
+  static const Color _goldLight = Color(0xFFFFD700);
+  static const Color _goldDark = Color(0xFFDAA520);
+  static const Color _surfaceColor = Colors.white;
+
   @override
   void initState() {
     super.initState();
@@ -104,131 +111,124 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF7E0),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Шапка с заголовком и кнопкой назад
-            Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Кнопка "назад"
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: RotatedBox(
-                        quarterTurns: 1,
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Color(0xFF16151A),
-                          size: 20,
-                        ),
-                      ),
-                    ),
-                  ),
-                  // Заголовок
-                  const Text(
-                    'Edit Profile',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF16151A),
-                    ),
-                  ),
-                  // Пустое пространство для симметрии
-                  const SizedBox(width: 24),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            // Аватар пользователя
-            GestureDetector(
-              onTap: _openAvatarSelection,
-              child: Stack(
-                children: [
-                  Container(
-                    width: 130,
-                    height: 130,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: const Color(0xFF292D33),
-                      image: DecorationImage(
-                        image: AssetImage(_avatarPath),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                  ),
-                  Positioned(
-                    right: 0,
-                    bottom: 0,
-                    child: Container(
-                      width: 36,
-                      height: 36,
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF9A0104),
-                        shape: BoxShape.circle,
-                        border: Border.all(
-                          color: const Color(0xFFFDF7E0),
-                          width: 2,
-                        ),
-                      ),
-                      child: const Icon(
-                        Icons.edit,
-                        size: 20,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            const SizedBox(height: 30),
-
-            // Форма редактирования данных
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                child: Container(
-                  width: double.infinity,
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              _primaryBlue,
+              _primaryBlue.withOpacity(0.8),
+              _secondaryBlue.withOpacity(0.3),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                // Шапка с заголовком и кнопкой назад
+                Padding(
                   padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF16151A),
-                    borderRadius: BorderRadius.circular(14),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                        onTap: () => Navigator.pop(context),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: Colors.white.withOpacity(0.2),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: const Icon(
+                            Icons.arrow_back_ios_new,
+                            color: Colors.white,
+                            size: 20,
+                          ),
+                        ),
+                      ),
+                      const Text(
+                        'Edit Profile',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(width: 40),
+                    ],
                   ),
-                  child: SingleChildScrollView(
+                ),
+
+                const SizedBox(height: 20),
+
+                // Аватар пользователя
+                GestureDetector(
+                  onTap: _openAvatarSelection,
+                  child: Container(
+                    padding: const EdgeInsets.all(4),
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(colors: [_goldLight, _goldDark]),
+                      shape: BoxShape.circle,
+                    ),
+                    child: CircleAvatar(
+                      radius: 60,
+                      backgroundColor: Colors.white,
+                      child: CircleAvatar(
+                        radius: 58,
+                        backgroundImage: AssetImage(_avatarPath),
+                      ),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 30),
+
+                // Форма редактирования данных
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.05),
+                          offset: const Offset(0, 4),
+                          blurRadius: 20,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                    ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const Text(
+                        Text(
                           'Personal Information',
                           style: TextStyle(
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            color: Color(0xFFFDF7E0),
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.grey[800],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 24),
 
                         // Имя
                         _buildInputField(
                           label: 'First Name',
                           controller: _firstNameController,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
 
                         // Фамилия
                         _buildInputField(
                           label: 'Last Name',
                           controller: _lastNameController,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
 
                         // Email
                         _buildInputField(
@@ -236,7 +236,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           controller: _emailController,
                           keyboardType: TextInputType.emailAddress,
                         ),
-                        const SizedBox(height: 15),
+                        const SizedBox(height: 20),
 
                         // Возраст
                         _buildInputField(
@@ -245,26 +245,27 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           keyboardType: TextInputType.number,
                         ),
 
-                        const SizedBox(height: 40),
+                        const SizedBox(height: 32),
 
                         // Кнопка сохранения
                         SizedBox(
                           width: double.infinity,
-                          height: 50,
+                          height: 56,
                           child: ElevatedButton(
                             onPressed: _saveProfile,
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: const Color(0xFF9A0104),
+                              backgroundColor: _primaryBlue,
+                              foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(14),
+                                borderRadius: BorderRadius.circular(16),
                               ),
+                              elevation: 0,
                             ),
                             child: const Text(
-                              'Save',
+                              'Save Changes',
                               style: TextStyle(
-                                color: Color(0xFFFDF7E0),
-                                fontSize: 17,
-                                fontWeight: FontWeight.w500,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
                               ),
                             ),
                           ),
@@ -273,20 +274,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                 ),
-              ),
+              ],
             ),
-
-            // Индикатор внизу экрана
-            Container(
-              height: 5,
-              width: 134,
-              margin: const EdgeInsets.only(top: 10, bottom: 20),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );
@@ -302,26 +292,31 @@ class _EditProfilePageState extends State<EditProfilePage> {
       children: [
         Text(
           label,
-          style: const TextStyle(fontSize: 14, color: Color(0xFFFDF7E0)),
+          style: TextStyle(
+            fontSize: 14,
+            color: Colors.grey[600],
+            fontWeight: FontWeight.w500,
+          ),
         ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
-            color: const Color(0xFFFDF7E0),
-            borderRadius: BorderRadius.circular(10),
+            color: Colors.grey[50],
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[200]!),
           ),
           child: TextField(
             controller: controller,
             keyboardType: keyboardType,
-            style: const TextStyle(color: Color(0xFF16151A), fontSize: 15),
+            style: const TextStyle(color: Color(0xFF2D3142), fontSize: 16),
             decoration: InputDecoration(
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(12),
                 borderSide: BorderSide.none,
               ),
               contentPadding: const EdgeInsets.symmetric(
-                horizontal: 15,
-                vertical: 12,
+                horizontal: 16,
+                vertical: 16,
               ),
               isDense: true,
             ),

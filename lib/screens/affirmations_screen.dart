@@ -16,46 +16,61 @@ class _AffirmationsScreenState extends State<AffirmationsScreen> {
   int _currentPage = 0;
   final AffirmationService _affirmationService = AffirmationService();
 
+  // Обновленная цветовая схема
+  static const Color _primaryBlue = Color(0xFF1E3D59);
+  static const Color _secondaryBlue = Color(0xFF17C3B2);
+  static const Color _goldLight = Color(0xFFFFD700);
+  static const Color _goldDark = Color(0xFFDAA520);
+  static const Color _surfaceColor = Colors.white;
+
   final List<AffirmationCard> _cards = [
     AffirmationCard(
       text: "I deserve the space to grow and learn to become my best self",
-      backgroundColor: const Color(0xFFB05441),
-      textColor: const Color(0xFFFBF7EE),
+      gradient: const LinearGradient(
+        colors: [Color(0xFF6C5CE7), Color(0xFFA8A4E6)],
+      ),
     ),
     AffirmationCard(
       text: "I am perfect, whole, and complete",
-      backgroundColor: const Color(0xFF1F351B),
-      textColor: const Color(0xFFB6F42C),
+      gradient: const LinearGradient(
+        colors: [Color(0xFF00B894), Color(0xFF00CEC9)],
+      ),
     ),
     AffirmationCard(
       text: "I am allowed to ask for what I need",
-      backgroundColor: const Color(0xFFFEDB25),
-      textColor: Colors.black,
+      gradient: const LinearGradient(
+        colors: [Color(0xFFFDCB6E), Color(0xFFFFE5A0)],
+      ),
     ),
     AffirmationCard(
       text: "My net worth is not my self-worth",
-      backgroundColor: const Color(0xFFF3EFE6),
-      textColor: const Color(0xFFC10219),
+      gradient: const LinearGradient(
+        colors: [Color(0xFFFF7675), Color(0xFFFFA8A8)],
+      ),
     ),
     AffirmationCard(
       text: "I am capable and competent in my job",
-      backgroundColor: const Color(0xFFDBDC84),
-      textColor: const Color(0xFF132718),
+      gradient: const LinearGradient(
+        colors: [Color(0xFF74B9FF), Color(0xFFA8E6FF)],
+      ),
     ),
     AffirmationCard(
       text: "Together, we can overcome any challenge",
-      backgroundColor: const Color(0xFF252423),
-      textColor: const Color(0xFFF3EFE6),
+      gradient: const LinearGradient(
+        colors: [Color(0xFF6C5CE7), Color(0xFFA8A4E6)],
+      ),
     ),
     AffirmationCard(
       text: "I am lucky in love, work, and all areas of my life",
-      backgroundColor: const Color(0xFF8F69FC),
-      textColor: const Color(0xFFDAFC6C),
+      gradient: const LinearGradient(
+        colors: [Color(0xFF00B894), Color(0xFF00CEC9)],
+      ),
     ),
     AffirmationCard(
       text: "I am achieving my career goals",
-      backgroundColor: const Color(0xFFC5192C),
-      textColor: const Color(0xFFF2FD71),
+      gradient: const LinearGradient(
+        colors: [Color(0xFFFDCB6E), Color(0xFFFFE5A0)],
+      ),
     ),
   ];
 
@@ -68,14 +83,12 @@ class _AffirmationsScreenState extends State<AffirmationsScreen> {
 
   Future<void> _initializeAffirmations() async {
     if (_affirmationsBox.isEmpty) {
-      // Добавляем начальные аффирмации
       await _affirmationsBox.addAll([
         AffirmationRecord(
           id: '1',
           text: 'I deserve the space to grow and learn to become my best self',
         ),
         AffirmationRecord(id: '2', text: 'I am perfect, whole, and complete'),
-        // Добавьте остальные аффирмации
       ]);
     }
   }
@@ -100,95 +113,250 @@ class _AffirmationsScreenState extends State<AffirmationsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final affirmations = _affirmationService.getAllAffirmations();
-
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF7E0),
-      body: SafeArea(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            const Text(
-              'Affirmations',
-              style: TextStyle(fontSize: 24, color: Color(0xFF16151A)),
-            ),
-            const SizedBox(height: 20),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 33),
-              child: Text(
-                'Repeat affirmations every day to improve your mental state and boost your confidence',
-                textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 17, color: Color(0xFF16151A)),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              _primaryBlue,
+              _primaryBlue.withOpacity(0.8),
+              _secondaryBlue.withOpacity(0.3),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Stack(
+            children: [
+              // Декоративные элементы
+              Positioned(
+                top: -50,
+                right: -30,
+                child: Container(
+                  width: 200,
+                  height: 200,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        _goldLight.withOpacity(0.2),
+                        _goldDark.withOpacity(0.1),
+                      ],
+                    ),
+                  ),
+                ),
               ),
-            ),
-            const SizedBox(height: 20),
-            _buildPageIndicator(),
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                itemCount: _cards.length,
-                onPageChanged: (int page) {
-                  setState(() {
-                    _currentPage = page;
-                  });
-                },
-                itemBuilder: (context, index) {
-                  return Padding(
+              Positioned(
+                bottom: 100,
+                left: -50,
+                child: Container(
+                  width: 150,
+                  height: 150,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    gradient: RadialGradient(
+                      colors: [
+                        _secondaryBlue.withOpacity(0.2),
+                        _primaryBlue.withOpacity(0.1),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // Основной контент
+              Column(
+                children: [
+                  Container(
+                    margin: const EdgeInsets.all(16),
                     padding: const EdgeInsets.all(20),
-                    child: _buildAffirmationCard(_cards[index]),
-                  );
-                },
+                    decoration: BoxDecoration(
+                      color: _surfaceColor.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _goldLight.withOpacity(0.2),
+                          offset: const Offset(0, 4),
+                          blurRadius: 20,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                      border: Border.all(
+                        color: _goldLight.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Column(
+                      children: [
+                        Text(
+                          'Daily Affirmations',
+                          style: TextStyle(
+                            color: _primaryBlue,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Repeat affirmations every day to improve your mental state and boost your confidence',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.grey[600],
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _buildPageIndicator(),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _pageController,
+                      itemCount: _cards.length,
+                      onPageChanged: (int page) {
+                        setState(() {
+                          _currentPage = page;
+                        });
+                      },
+                      itemBuilder: (context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 16),
+                          child: _buildAffirmationCard(_cards[index]),
+                        );
+                      },
+                    ),
+                  ),
+                  Container(
+                    margin: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: _surfaceColor.withOpacity(0.9),
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: _goldLight.withOpacity(0.2),
+                          offset: const Offset(0, 4),
+                          blurRadius: 20,
+                          spreadRadius: 0,
+                        ),
+                      ],
+                      border: Border.all(
+                        color: _goldLight.withOpacity(0.3),
+                        width: 1,
+                      ),
+                    ),
+                    child: Text(
+                      'Affirmations - the key to a good mood',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: _primaryBlue,
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 20),
-            const Text(
-              'Affirmations - the key to a good mood',
-              textAlign: TextAlign.center,
-              style: TextStyle(fontSize: 24, color: Color(0xFF16151A)),
-            ),
-            const SizedBox(height: 20),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 
   Widget _buildPageIndicator() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: List<Widget>.generate(_cards.length, (int index) {
-        return Container(
-          width: 8,
-          height: 8,
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: const Color(0xFF16151A), width: 1),
-            color:
-                _currentPage == index
-                    ? const Color(0xFFC84D4D)
-                    : Colors.transparent,
-          ),
-        );
-      }),
+    return Container(
+      margin: const EdgeInsets.symmetric(vertical: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: List<Widget>.generate(_cards.length, (int index) {
+          return Container(
+            width: 8,
+            height: 8,
+            margin: const EdgeInsets.symmetric(horizontal: 4),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color:
+                  _currentPage == index
+                      ? _secondaryBlue
+                      : Colors.white.withOpacity(0.3),
+            ),
+          );
+        }),
+      ),
     );
   }
 
   Widget _buildAffirmationCard(AffirmationCard card) {
     return Container(
       decoration: BoxDecoration(
-        color: card.backgroundColor,
-        borderRadius: BorderRadius.circular(28),
-      ),
-      child: Center(
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Text(
-            card.text,
-            textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 32, color: card.textColor, height: 1.2),
+        gradient: card.gradient,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: card.gradient.colors.first.withOpacity(0.3),
+            offset: const Offset(0, 8),
+            blurRadius: 16,
+            spreadRadius: 0,
           ),
-        ),
+        ],
+      ),
+      child: Stack(
+        children: [
+          // Декоративный элемент
+          Positioned(
+            top: -20,
+            right: -20,
+            child: Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: RadialGradient(
+                  colors: [Colors.white.withOpacity(0.2), Colors.transparent],
+                ),
+              ),
+            ),
+          ),
+          // Контент
+          Container(
+            padding: const EdgeInsets.all(24),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  card.text,
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w600,
+                    height: 1.3,
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: () {
+                    // Добавить функционал для отметки аффирмации
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: card.gradient.colors.first,
+                    minimumSize: const Size(120, 40),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    elevation: 0,
+                  ),
+                  child: const Text(
+                    'Mark as Done',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -196,12 +364,7 @@ class _AffirmationsScreenState extends State<AffirmationsScreen> {
 
 class AffirmationCard {
   final String text;
-  final Color backgroundColor;
-  final Color textColor;
+  final LinearGradient gradient;
 
-  AffirmationCard({
-    required this.text,
-    required this.backgroundColor,
-    required this.textColor,
-  });
+  AffirmationCard({required this.text, required this.gradient});
 }

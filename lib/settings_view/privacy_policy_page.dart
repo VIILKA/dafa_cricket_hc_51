@@ -5,118 +5,142 @@ class PrivacyPolicyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Color scheme
+    const Color primaryBlue = Color(0xFF1E3D59);
+    const Color secondaryBlue = Color(0xFF17C3B2);
+    const Color goldLight = Color(0xFFFFD700);
+    const Color goldDark = Color(0xFFDAA520);
+    const Color surfaceColor = Colors.white;
+
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF7E0),
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Шапка с заголовком и кнопкой назад
-            Padding(
-              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Кнопка "назад"
-                  GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: const SizedBox(
-                      width: 24,
-                      height: 24,
-                      child: RotatedBox(
-                        quarterTurns: 1,
-                        child: Icon(
-                          Icons.arrow_back_ios,
-                          color: Color(0xFF16151A),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              primaryBlue,
+              primaryBlue.withOpacity(0.8),
+              secondaryBlue.withOpacity(0.3),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: Column(
+            children: [
+              // Header
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
                           size: 20,
                         ),
                       ),
                     ),
-                  ),
-                  // Заголовок
-                  const Text(
-                    'Privacy Policy',
-                    style: TextStyle(
-                      fontSize: 17,
-                      fontWeight: FontWeight.w600,
-                      color: Color(0xFF16151A),
+                    const Text(
+                      'Privacy Policy',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                      ),
                     ),
-                  ),
-                  // Пустое пространство для симметрии
-                  const SizedBox(width: 24),
-                ],
+                    const SizedBox(width: 40),
+                  ],
+                ),
               ),
-            ),
 
-            // Основной текст
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
+              // Main content
+              Expanded(
                 child: Container(
-                  width: double.infinity,
+                  margin: const EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.all(24),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF16151A),
-                    borderRadius: BorderRadius.circular(14),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 16.0,
-                    vertical: 20.0,
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        offset: const Offset(0, 4),
+                        blurRadius: 20,
+                        spreadRadius: 0,
+                      ),
+                    ],
                   ),
                   child: SingleChildScrollView(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        _buildSectionTitle('Privacy Policy'),
+                        _buildSectionTitle('About Our App'),
                         _buildSectionText(
-                          'At cal, we are committed to protecting your privacy and ensuring the security of your personal information. This privacy policy explains how we collect, use, and safeguard your data while you use our application.',
+                          'We are committed to protecting your privacy and ensuring the security of your emotional well-being data. This privacy policy explains how we collect, use, and safeguard your information while you use our mood tracking application.',
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
                         _buildSectionTitle('1. Information We Collect'),
                         _buildSectionSubtitle('Personal Information'),
+                        _buildBulletPoint('Name and contact details'),
                         _buildBulletPoint(
-                          'Name and contact details (email address)',
+                          'Profile information (age, preferences)',
                         ),
-                        _buildBulletPoint('Profile information (age, weight)'),
-                        _buildBulletPoint('Mood tracking data and preferences'),
+                        _buildBulletPoint('Mood tracking data and patterns'),
                         _buildBulletPoint('Usage statistics and achievements'),
 
-                        const SizedBox(height: 10),
-                        _buildSectionSubtitle('Activity Data'),
-                        _buildBulletPoint('Mood entries and emotional states'),
-                        _buildBulletPoint('Trigger lists and patterns'),
-                        _buildBulletPoint('Comments and notes you create'),
-                        _buildBulletPoint('App usage statistics'),
-
                         const SizedBox(height: 16),
+                        _buildSectionSubtitle('Emotional Data'),
+                        _buildBulletPoint(
+                          'Daily mood entries and emotional states',
+                        ),
+                        _buildBulletPoint('Trigger lists and patterns'),
+                        _buildBulletPoint('Personal notes and reflections'),
+                        _buildBulletPoint('App usage patterns and preferences'),
+
+                        const SizedBox(height: 24),
                         _buildSectionTitle('2. How We Use Your Information'),
                         _buildBulletPoint(
                           'To provide personalized mood tracking',
                         ),
-                        _buildBulletPoint('To show statistics and insights'),
                         _buildBulletPoint(
-                          'To improve our emotional wellness content',
+                          'To analyze emotional patterns and trends',
                         ),
                         _buildBulletPoint(
-                          'To send notifications about your tracking',
+                          'To improve our emotional wellness features',
                         ),
-                        _buildBulletPoint('To generate wellness analytics'),
+                        _buildBulletPoint(
+                          'To send relevant notifications and reminders',
+                        ),
+                        _buildBulletPoint(
+                          'To generate wellness insights and reports',
+                        ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
                         _buildSectionTitle('3. Data Security'),
                         _buildBulletPoint(
-                          'We implement industry-standard security measures',
+                          'We implement industry-standard encryption',
                         ),
                         _buildBulletPoint(
-                          'Your data is stored locally on your device',
+                          'Your data is stored securely on your device',
                         ),
                         _buildBulletPoint(
-                          'We use encryption to protect sensitive information',
+                          'Regular security audits and updates',
                         ),
                         _buildBulletPoint(
-                          'Regular security audits are performed',
+                          'Protection against unauthorized access',
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
                         _buildSectionTitle('4. Data Sharing'),
                         _buildBulletPoint(
                           'We do not sell your personal information',
@@ -125,44 +149,36 @@ class PrivacyPolicyPage extends StatelessWidget {
                           'We do not share your data with third parties',
                         ),
                         _buildBulletPoint(
-                          'All your emotional data stays on your device',
+                          'Your emotional data remains private',
+                        ),
+                        _buildBulletPoint(
+                          'Optional participation in anonymous statistics',
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
                         _buildSectionTitle('5. Your Rights'),
                         _buildBulletPoint('Access your personal data'),
                         _buildBulletPoint('Correct inaccurate information'),
-                        _buildBulletPoint('Request data deletion'),
-                        _buildBulletPoint('Export your tracking data'),
+                        _buildBulletPoint('Delete your account'),
+                        _buildBulletPoint('Export your tracking history'),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
                         _buildSectionTitle('6. Changes to This Policy'),
                         _buildSectionText(
-                          'We may update this privacy policy to reflect changes in our practices or legal requirements. We will notify you of any significant changes.',
+                          'We may update this privacy policy to reflect changes in our practices or legal requirements. We will notify you of any significant changes through the app.',
                         ),
 
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 24),
                         _buildSectionText(
-                          'For any privacy-related questions, please contact us at privacy@cal.edu',
+                          'For any privacy-related questions, please contact us at privacy@dafacricket.com',
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
-            ),
-
-            // Индикатор внизу экрана
-            Container(
-              height: 5,
-              width: 134,
-              margin: const EdgeInsets.only(bottom: 20),
-              decoration: BoxDecoration(
-                color: Colors.black,
-                borderRadius: BorderRadius.circular(5),
-              ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -176,7 +192,7 @@ class PrivacyPolicyPage extends StatelessWidget {
         style: const TextStyle(
           fontSize: 18,
           fontWeight: FontWeight.bold,
-          color: Color(0xFFFDF7E0),
+          color: Color(0xFF2D3142),
         ),
       ),
     );
@@ -190,7 +206,7 @@ class PrivacyPolicyPage extends StatelessWidget {
         style: const TextStyle(
           fontSize: 16,
           fontWeight: FontWeight.w600,
-          color: Color(0xFFFDF7E0),
+          color: Color(0xFF2D3142),
         ),
       ),
     );
@@ -201,7 +217,7 @@ class PrivacyPolicyPage extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 8.0),
       child: Text(
         text,
-        style: const TextStyle(fontSize: 14, color: Color(0xFFFDF7E0)),
+        style: const TextStyle(fontSize: 14, color: Color(0xFF4E5D78)),
       ),
     );
   }
@@ -216,7 +232,7 @@ class PrivacyPolicyPage extends StatelessWidget {
             '•',
             style: TextStyle(
               fontSize: 14,
-              color: Color(0xFFFDF7E0),
+              color: Color(0xFF4E5D78),
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -224,7 +240,7 @@ class PrivacyPolicyPage extends StatelessWidget {
           Expanded(
             child: Text(
               text,
-              style: const TextStyle(fontSize: 14, color: Color(0xFFFDF7E0)),
+              style: const TextStyle(fontSize: 14, color: Color(0xFF4E5D78)),
             ),
           ),
         ],

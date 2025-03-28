@@ -1,4 +1,4 @@
-package com.example.dafa_cricket_hc_51
+package com.dafa.cricket.gm
 
 import io.flutter.embedding.android.FlutterActivity
 

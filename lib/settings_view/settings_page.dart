@@ -231,264 +231,195 @@ Stay curious. Keep learning. Achieve your goals with cal!''',
     }
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFDF7E0),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: Container(
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [
+              const Color(0xFF1E3D59),
+              const Color(0xFF1E3D59).withOpacity(0.8),
+              const Color(0xFF17C3B2).withOpacity(0.3),
+            ],
+          ),
+        ),
+        child: SafeArea(
+          child: SingleChildScrollView(
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(height: 20),
-                const Center(
-                  child: Text(
-                    'My Profile',
-                    style: TextStyle(fontSize: 24, color: Color(0xFF16151A)),
+                // Верхняя панель с профилем
+                Container(
+                  margin: const EdgeInsets.all(16),
+                  padding: const EdgeInsets.all(20),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.9),
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: const Color(0xFFFFD700).withOpacity(0.2),
+                        offset: const Offset(0, 4),
+                        blurRadius: 20,
+                        spreadRadius: 0,
+                      ),
+                    ],
+                    border: Border.all(
+                      color: const Color(0xFFFFD700).withOpacity(0.3),
+                      width: 1,
+                    ),
+                  ),
+                  child: ValueListenableBuilder<Box<UserProfile>>(
+                    valueListenable: Hive.box<UserProfile>('user').listenable(),
+                    builder: (context, box, _) {
+                      final user = box.get('current_user');
+                      return GestureDetector(
+                        onTap: () {
+                          if (user != null) {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder:
+                                    (context) => EditProfilePage(
+                                      initialName: user.firstName,
+                                      initialSurname: user.lastName,
+                                      initialAge: user.level,
+                                      initialEmail: user.email,
+                                      initialAvatarPath: user.avatarPath,
+                                    ),
+                              ),
+                            );
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Container(
+                              padding: const EdgeInsets.all(2),
+                              decoration: BoxDecoration(
+                                gradient: LinearGradient(
+                                  colors: [
+                                    const Color(0xFF1E3D59),
+                                    const Color(0xFF17C3B2).withOpacity(0.8),
+                                  ],
+                                ),
+                                shape: BoxShape.circle,
+                              ),
+                              child: CircleAvatar(
+                                radius: 28,
+                                backgroundColor: Colors.white,
+                                child: CircleAvatar(
+                                  radius: 26,
+                                  backgroundImage: AssetImage(
+                                    user?.avatarPath.isNotEmpty == true
+                                        ? user!.avatarPath
+                                        : 'assets/images/avatar.png',
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 16),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Profile Settings',
+                                    style: TextStyle(
+                                      color: Colors.grey[600],
+                                      fontSize: 14,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  Text(
+                                    user?.firstName.isNotEmpty == true
+                                        ? user!.firstName
+                                        : 'User',
+                                    style: const TextStyle(
+                                      color: Color(0xFF2D3142),
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Icon(Icons.chevron_right, color: Colors.grey[400]),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 ),
-                const SizedBox(height: 35),
-                Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    GestureDetector(
-                      onTap: _openAvatarSelection,
-                      child: Container(
-                        width: 148,
-                        height: 148,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: const Color(0xFF292D33),
-                          image: DecorationImage(
-                            image: AssetImage(_avatarPath),
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 100,
-                      top: 0,
-                      child: Container(
-                        width: 16,
-                        height: 17,
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF242833),
-                          shape: BoxShape.circle,
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          size: 12,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 20),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '$_firstName $_lastName',
-                      style: const TextStyle(
-                        fontSize: 17,
-                        color: Color(0xFF16151A),
-                      ),
-                    ),
-                    const SizedBox(width: 10),
-                    GestureDetector(
-                      onTap: _openEditProfile,
-                      child: Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          color: const Color(0xFF9A0104),
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: const Color(0xFFFDF7E0),
-                            width: 1,
-                          ),
-                        ),
-                        child: const Icon(
-                          Icons.edit,
-                          size: 14,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 30),
+
+                // Секция настроек
                 Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(10),
+                  margin: const EdgeInsets.symmetric(horizontal: 16),
+                  padding: const EdgeInsets.all(20),
                   decoration: BoxDecoration(
-                    color: const Color(0xFF16151A),
-                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(24),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        offset: const Offset(0, 4),
+                        blurRadius: 20,
+                        spreadRadius: 0,
+                      ),
+                    ],
                   ),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'Your grade',
-                          style: TextStyle(
-                            color: Color(0xFFFDF7E0),
-                            fontSize: 17,
-                          ),
+                      Text(
+                        'Settings',
+                        style: TextStyle(
+                          color: Colors.grey[800],
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.symmetric(
-                          vertical: 10,
-                          horizontal: 15,
-                        ),
-                        decoration: BoxDecoration(
-                          color: const Color(0xFFFBD751),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Text(
-                              'Beginner',
-                              style: TextStyle(
-                                color: Color(0xFF16151A),
-                                fontSize: 17,
-                              ),
-                            ),
-                            const SizedBox(width: 5),
-                            GestureDetector(
-                              onTapDown: (details) {
-                                final RenderBox button =
-                                    context.findRenderObject() as RenderBox;
-                                final Offset buttonPosition = button
-                                    .localToGlobal(Offset.zero);
-
-                                showMenu(
-                                  context: context,
-                                  position: RelativeRect.fromLTRB(
-                                    buttonPosition.dx,
-                                    buttonPosition.dy + button.size.height,
-                                    buttonPosition.dx + button.size.width,
-                                    buttonPosition.dy +
-                                        button.size.height +
-                                        300,
-                                  ),
-                                  items: [
-                                    PopupMenuItem(
-                                      enabled: false,
-                                      child: Container(
-                                        width: 203,
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: BoxDecoration(
-                                          color: const Color(0xFFFDF7E0),
-                                          borderRadius: BorderRadius.circular(
-                                            10,
-                                          ),
-                                        ),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            const Text(
-                                              'You will be given a title for entries over a period of time.',
-                                              style: TextStyle(
-                                                color: Color(0xFF16151A),
-                                                fontSize: 14,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 6),
-                                            Container(
-                                              height: 1,
-                                              color: const Color(0xFF16151A),
-                                            ),
-                                            const SizedBox(height: 6),
-                                            const Text(
-                                              'Beginner - For entries within 5 days',
-                                              style: TextStyle(
-                                                color: Color(0xFFDEAF00),
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            const Text(
-                                              'Advanced - For entries within 14 days',
-                                              style: TextStyle(
-                                                color: Color(0xFFEE7700),
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            const Text(
-                                              'Experienced - For entries within 35 days',
-                                              style: TextStyle(
-                                                color: Color(0xFF8EAF3C),
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                            const SizedBox(height: 5),
-                                            const Text(
-                                              'Pro - For entries within 90 days',
-                                              style: TextStyle(
-                                                color: Color(0xFF548BA5),
-                                                fontSize: 12,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                );
-                              },
-                              child: Container(
-                                width: 19,
-                                height: 19,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  border: Border.all(
-                                    color: const Color(0xFF16151A),
-                                  ),
-                                ),
-                                child: const Center(
-                                  child: Text(
-                                    '?',
-                                    style: TextStyle(
-                                      color: Color(0xFF16151A),
-                                      fontSize: 14,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                      const SizedBox(height: 16),
+                      _buildSettingItem(
+                        context,
+                        icon: Icons.person_outline,
+                        title: 'Edit Profile',
+                        subtitle: 'Change your profile information',
+                        onTap: _openEditProfile,
                       ),
-                      const SizedBox(height: 24),
-                      const Padding(
-                        padding: EdgeInsets.all(10),
-                        child: Text(
-                          'About app',
-                          style: TextStyle(
-                            color: Color(0xFFFDF7E0),
-                            fontSize: 17,
-                          ),
-                        ),
+                      _buildSettingItem(
+                        context,
+                        icon: Icons.lock_outline,
+                        title: 'Privacy Policy',
+                        subtitle: 'Read our privacy policy',
+                        onTap: _openPrivacyPolicy,
                       ),
-                      const SizedBox(height: 12),
-                      _buildSettingsButton('Edit Profile', _openEditProfile),
-                      const SizedBox(height: 10),
-                      _buildSettingsButton('Rate us', _handleRate),
-                      const SizedBox(height: 10),
-                      _buildSettingsButton(
-                        'Privacy Policy',
-                        _openPrivacyPolicy,
+                      _buildSettingItem(
+                        context,
+                        icon: Icons.help_outline,
+                        title: 'Help & Support',
+                        subtitle: 'Get help and contact support',
+                        onTap: _openContactUs,
                       ),
-                      const SizedBox(height: 10),
-                      _buildSettingsButton('About us', _openAboutUs),
+                      _buildSettingItem(
+                        context,
+                        icon: Icons.info_outline,
+                        title: 'About',
+                        subtitle: 'Learn more about the app',
+                        onTap: _openAboutUs,
+                      ),
+                      _buildSettingItem(
+                        context,
+                        icon: Icons.share_outlined,
+                        title: 'Share App',
+                        subtitle: 'Share with friends and family',
+                        onTap: _handleShare,
+                      ),
+                      _buildSettingItem(
+                        context,
+                        icon: Icons.star_outline,
+                        title: 'Rate Us',
+                        subtitle: 'Rate us on the app store',
+                        onTap: _handleRate,
+                      ),
                     ],
                   ),
                 ),
@@ -500,21 +431,55 @@ Stay curious. Keep learning. Achieve your goals with cal!''',
     );
   }
 
-  Widget _buildSettingsButton(String title, VoidCallback onTap) {
-    return InkWell(
+  Widget _buildSettingItem(
+    BuildContext context, {
+    required IconData icon,
+    required String title,
+    required String subtitle,
+    required VoidCallback onTap,
+  }) {
+    return GestureDetector(
       onTap: onTap,
       child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.symmetric(vertical: 9),
+        margin: const EdgeInsets.only(bottom: 16),
+        padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: const Color(0xFFFDF7E0),
-          borderRadius: BorderRadius.circular(10),
+          color: Colors.grey[50],
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.grey[200]!),
         ),
-        child: Center(
-          child: Text(
-            title,
-            style: const TextStyle(color: Color(0xFF16151A), fontSize: 17),
-          ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: const Color(0xFF1E3D59).withOpacity(0.1),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Icon(icon, color: const Color(0xFF1E3D59), size: 24),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    subtitle,
+                    style: TextStyle(color: Colors.grey[600], fontSize: 14),
+                  ),
+                ],
+              ),
+            ),
+            Icon(Icons.chevron_right, color: Colors.grey[400]),
+          ],
         ),
       ),
     );
